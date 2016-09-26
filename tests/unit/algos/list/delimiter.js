@@ -60,16 +60,16 @@ describe('Delimiter listing algorithm', () => {
         }),
         new Test('with valid marker', {
             gt: '/notes/summer/1.txt',
-            delimiter: '/',
         }, {
             Contents: [
                 receivedData[4],
+                receivedData[5],
                 receivedData[6],
                 receivedData[7],
                 receivedData[8],
             ],
-            CommonPrefixes: ['/notes/summer/august/'],
-            Delimiter: '/',
+            CommonPrefixes: [],
+            Delimiter: undefined,
             IsTruncated: false,
             NextMarker: undefined,
         }, (e, input) => e.key > input.gt),
@@ -174,6 +174,7 @@ describe('Delimiter listing algorithm', () => {
             Contents: [
                 receivedData[6],
                 receivedData[7],
+                receivedData[9],
             ],
             CommonPrefixes: [
                 '/notes/spring/',
@@ -195,6 +196,44 @@ describe('Delimiter listing algorithm', () => {
             CommonPrefixes: [
                 '/notes/zaphod/',
             ],
+            Delimiter: '/',
+            IsTruncated: false,
+            NextMarker: undefined,
+        }, (e, input) => e.key > input.gt),
+        new Test('all parameters 1/3', {
+            delimiter: '/',
+            start: '/notes/',
+            gt: '/notes/',
+            maxKeys: 1,
+        }, {
+            Contents: [],
+            CommonPrefixes: ['/notes/spring/'],
+            Delimiter: '/',
+            IsTruncated: true,
+            NextMarker: '/notes/spring/',
+        }, (e, input) => e.key > input.gt),
+
+        new Test('all parameters 2/3', {
+            delimiter: '/',
+            start: '/notes/', // prefix
+            gt: '/notes/spring/',
+            maxKeys: 1,
+        }, {
+            Contents: [],
+            CommonPrefixes: ['/notes/summer/'],
+            Delimiter: '/',
+            IsTruncated: true,
+            NextMarker: '/notes/summer/',
+        }, (e, input) => e.key > input.gt),
+
+        new Test('all parameters 3/3', {
+            delimiter: '/',
+            start: '/notes/',
+            gt: '/notes/yore.rs',
+            maxKeys: 1,
+        }, {
+            Contents: [],
+            CommonPrefixes: ['/notes/zaphod/'],
             Delimiter: '/',
             IsTruncated: false,
             NextMarker: undefined,
